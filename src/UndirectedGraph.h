@@ -4,7 +4,7 @@
 #include "graph.h"
 
 template<typename TI, typename TV, typename TE>
-class UnDirectedGraph : public Graph<TI, TV, TE> {
+class UndirectedGraph : public Graph<TI, TV, TE> {
 public:
     bool insertVertex(const TI& id, const TV& vertex) override;
     bool createEdge(const TI& id1, const TI& id2, const TE& weight) override;
@@ -13,7 +13,6 @@ public:
     TE& operator()(const TI& id1, const TI& id2) override;
     float density() const override;
     bool isDense(float threshold = 0.5) const override;
-    bool isConnected() const override;
     bool empty() const override;
 
     void clear() override;
@@ -23,27 +22,27 @@ public:
 };
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::insertVertex(const TI& id, const TV& vertex) {
-    if (vertexes.find(id) != vertexes.end()) {
+bool UndirectedGraph<TI, TV, TE>::insertVertex(const TI& id, const TV& vertex) {
+    if (this->vertexes.find(id) != this->vertexes.end()) {
         return false; // El vértice ya existe en el grafo
     }
 
     Vertex<TI, TV, TE>* newVertex = new Vertex<TI, TV, TE>{id, vertex};
-    vertexes[id] = newVertex;
+    this->vertexes[id] = newVertex;
     return true;
 }
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::createEdge(const TI& id1, const TI& id2, const TE& weight) {
-    if (vertexes.find(id1) == vertexes.end() || vertexes.find(id2) == vertexes.end())
+bool UndirectedGraph<TI, TV, TE>::createEdge(const TI& id1, const TI& id2, const TE& weight) {
+    if (this->vertexes.find(id1) == this->vertexes.end() || this->vertexes.find(id2) == this->vertexes.end())
         return false; // Uno o ambos vértices no existen en el grafo
 
     // Buscar si la arista ya existe
-    for (Edge<TV, TE>* edge : vertexes[id1]->edges) {
+    for (Edge<TI, TV, TE>* edge : this->vertexes[id1]->edges) {
         if (edge->vertexes[1]->id == id2) {
             // La arista ya existe, actualizar el peso en ambas direcciones
             edge->weight = weight;
-            for (Edge<TV, TE>* reverseEdge : edge->vertexes[1]->edges) {
+            for (Edge<TI, TV, TE>* reverseEdge : edge->vertexes[1]->edges) {
                 if (reverseEdge->vertexes[1] == edge->vertexes[0]) {
                     reverseEdge->weight = weight;
                     break;
@@ -54,74 +53,78 @@ bool UnDirectedGraph<TI, TV, TE>::createEdge(const TI& id1, const TI& id2, const
     }
 
     // La arista no existe, crearla en ambas direcciones
-    Vertex<TI, TV, TE>* vertex1 = vertexes[id1];
-    Vertex<TI, TV, TE>* vertex2 = vertexes[id2];
+    Vertex<TI, TV, TE>* vertex1 = this->vertexes[id1];
+    Vertex<TI, TV, TE>* vertex2 = this->vertexes[id2];
 
-    Edge<TV, TE>* newEdge1 = new Edge<TV, TE>{{vertex1, vertex2}, weight};
+    Edge<TI, TV, TE>* newEdge1 = new Edge<TI, TV, TE>{{vertex1, vertex2}, weight};
     vertex1->edges.push_back(newEdge1);
 
-    Edge<TV, TE>* newEdge2 = new Edge<TV, TE>{{vertex2, vertex1}, weight};
+    Edge<TI, TV, TE>* newEdge2 = new Edge<TI, TV, TE>{{vertex2, vertex1}, weight};
     vertex2->edges.push_back(newEdge2);
 
     return true;
 }
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::deleteVertex(const TI& id) {
-    if (vertexes.find(id) == vertexes.end())
+bool UndirectedGraph<TI, TV, TE>::deleteVertex(const TI& id) {
+    if (this->vertexes.find(id) == this->vertexes.end())
         return false; // El vértice no existe en el grafo
 
-    // Eliminar todas las aristas incidentes al vértice
-    Vertex<TI, TV, TE>* vertex = vertexes[id];
-    for (Edge<TV, TE>* edge : vertex->edges) {
-        Vertex<TI, TV, TE>* adjacentVertex = edge->vertexes[1];
-        for (auto it = adjacentVertex->edges.begin(); it != adjacentVertex->edges.end(); ++it) {
-            if ((*it)->vertexes[1] == vertex) {
-                delete *it;
-                adjacentVertex->edges.erase(it);
-                break;
-            }
-        }
+    Vertex<TI, TV, TE>* vertex = this->vertexes[id];
+
+    // Eliminar las aristas que tienen al vértice como destino
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        Vertex<TI, TV, TE>* v = it->second;
+        v->edges.remove_if([vertex](Edge<TI, TV, TE>* edge) {
+            return edge->vertexes[1] == vertex;
+        });
     }
 
-    // Eliminar el vértice y liberar la memoria
+    // Eliminar las aristas que tienen al vértice como origen
+    vertex->edges.clear();
+
+    // Eliminar el vértice del grafo
     delete vertex;
-    vertexes.erase(id);
+    this->vertexes.erase(id);
 
     return true;
 }
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::deleteEdge(const TI& id1, const TI& id2) {
-    if (vertexes.find(id1) == vertexes.end() || vertexes.find(id2) == vertexes.end())
+bool UndirectedGraph<TI, TV, TE>::deleteEdge(const TI& id1, const TI& id2) {
+    if (this->vertexes.find(id1) == this->vertexes.end() || this->vertexes.find(id2) == this->vertexes.end())
         return false; // Uno o ambos vértices no existen en el grafo
 
-    Vertex<TI, TV, TE>* vertex1 = vertexes[id1];
-    Vertex<TI, TV, TE>* vertex2 = vertexes[id2];
+    Vertex<TI, TV, TE>* vertex1 = this->vertexes[id1];
+    Vertex<TI, TV, TE>* vertex2 = this->vertexes[id2];
 
     // Buscar la arista en el sentido id1 -> id2
-    Edge<TV, TE>* edge1 = nullptr;
-    for (Edge<TV, TE>* edge : vertex1->edges) {
+    Edge<TI, TV, TE>* edge1 = nullptr;
+    for (Edge<TI, TV, TE>* edge : vertex1->edges) {
         if (edge->vertexes[1] == vertex2) {
             edge1 = edge;
             break;
         }
     }
 
+    // Verificar si se encontró la arista
+    if (edge1 == nullptr)
+        return false; // La arista no existe en el grafo
+
     // Buscar la arista en el sentido id2 -> id1
-    Edge<TV, TE>* edge2 = nullptr;
-    for (Edge<TV, TE>* edge : vertex2->edges) {
+    Edge<TI, TV, TE>* edge2 = nullptr;
+    for (Edge<TI, TV, TE>* edge : vertex2->edges) {
         if (edge->vertexes[1] == vertex1) {
             edge2 = edge;
             break;
         }
     }
 
-    // Verificar si se encontraron ambas aristas
-    if (edge1 == nullptr || edge2 == nullptr)
+    // Verificar si se encontró la arista en el sentido opuesto
+    if (edge2 == nullptr)
         return false; // La arista no existe en el grafo
 
-    // Eliminar las aristas y liberar la memoria
+    // Eliminar ambas aristas y liberar la memoria
     vertex1->edges.remove(edge1);
     vertex2->edges.remove(edge2);
     delete edge1;
@@ -131,15 +134,15 @@ bool UnDirectedGraph<TI, TV, TE>::deleteEdge(const TI& id1, const TI& id2) {
 }
 
 template<typename TI, typename TV, typename TE>
-TE& UnDirectedGraph<TI, TV, TE>::operator()(const TI& id1, const TI& id2) {
-    if (vertexes.find(id1) == vertexes.end() || vertexes.find(id2) == vertexes.end())
+TE& UndirectedGraph<TI, TV, TE>::operator()(const TI& id1, const TI& id2) {
+    if (this->vertexes.find(id1) == this->vertexes.end() || this->vertexes.find(id2) == this->vertexes.end())
         throw std::out_of_range("One or both vertices do not exist in the graph.");
 
-    Vertex<TI, TV, TE>* vertex1 = vertexes[id1];
-    Vertex<TI, TV, TE>* vertex2 = vertexes[id2];
+    Vertex<TI, TV, TE>* vertex1 = this->vertexes[id1];
+    Vertex<TI, TV, TE>* vertex2 = this->vertexes[id2];
 
     // Buscar la arista en el sentido id1 -> id2
-    for (Edge<TV, TE>* edge : vertex1->edges) {
+    for (Edge<TI, TV, TE>* edge : vertex1->edges) {
         if (edge->vertexes[1] == vertex2)
             return edge->weight;
     }
@@ -148,14 +151,14 @@ TE& UnDirectedGraph<TI, TV, TE>::operator()(const TI& id1, const TI& id2) {
 }
 
 template<typename TI, typename TV, typename TE>
-float UnDirectedGraph<TI, TV, TE>::density() const {
+float UndirectedGraph<TI, TV, TE>::density() const {
     // Calcular el número total de aristas posibles
-    int vertexCount = vertexes.size();
-    int maxEdges = (vertexCount * (vertexCount - 1)) / 2;
+    int vertexCount = this->vertexes.size();
+    int maxEdges = vertexCount * (vertexCount - 1);
 
     // Contar el número de aristas existentes
     int edgeCount = 0;
-    for (const auto& pair : vertexes) {
+    for (const auto& pair : this->vertexes) {
         const Vertex<TI, TV, TE>* vertex = pair.second;
         edgeCount += vertex->edges.size();
     }
@@ -168,16 +171,72 @@ float UnDirectedGraph<TI, TV, TE>::density() const {
 }
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::isDense(float threshold) const {
+bool UndirectedGraph<TI, TV, TE>::isDense(float threshold) const {
     float graphDensity = density();
     return graphDensity >= threshold;
 }
 
 template<typename TI, typename TV, typename TE>
-bool UnDirectedGraph<TI, TV, TE>::empty() const {
-    return vertexes.empty();
+bool UndirectedGraph<TI, TV, TE>::empty() const {
+    return this->vertexes.empty();
 }
 
+template<typename TI, typename TV, typename TE>
+void UndirectedGraph<TI, TV, TE>::clear() {
+    // Eliminar todos los vértices y aristas del grafo
+    for (auto& pair : this->vertexes) {
+        Vertex<TI, TV, TE>* vertex = pair.second;
+        for (Edge<TI, TV, TE>* edge : vertex->edges) {
+            delete edge;
+        }
+        delete vertex;
+    }
 
+    // Limpiar el contenedor de vértices
+    this->vertexes.clear();
+}
+
+template<typename TI, typename TV, typename TE>
+void UndirectedGraph<TI, TV, TE>::display() const {
+    for (const auto& pair : this->vertexes) {
+        const Vertex<TI, TV, TE>* vertex = pair.second;
+        std::cout << "Vertex ID: " << vertex->id << ", Data: " << vertex->data << std::endl;
+        std::cout << "Adjacent Vertices:" << std::endl;
+        for (const Edge<TI, TV, TE>* edge : vertex->edges) {
+            const Vertex<TI, TV, TE>* adjacentVertex = (edge->vertexes[0] == vertex) ? edge->vertexes[1] : edge->vertexes[0];
+            std::cout << "  - Vertex ID: " << adjacentVertex->id;
+            std::cout << ", Data: " << adjacentVertex->data;
+            std::cout << ", Weight: " << edge->weight << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+
+template<typename TI, typename TV, typename TE>
+void UndirectedGraph<TI, TV, TE>::displayVertex(const TI& id) const {
+    if (this->vertexes.find(id) == this->vertexes.end()) {
+        std::cout << "Vertex with ID " << id << " does not exist in the graph." << std::endl;
+        return;
+    }
+
+    const Vertex<TI, TV, TE>* vertex = this->vertexes.at(id);
+    std::cout << "Vertex ID: " << vertex->id << ", Data: " << vertex->data << std::endl;
+    std::cout << "Adjacent Vertices:" << std::endl;
+    for (const Edge<TI, TV, TE>* edge : vertex->edges) {
+        const Vertex<TI, TV, TE>* adjacentVertex = (edge->vertexes[0] == vertex) ? edge->vertexes[1] : edge->vertexes[0];
+        std::cout << "  - Vertex ID: " << adjacentVertex->id;
+        std::cout << ", Data: " << adjacentVertex->data;
+        std::cout << ", Weight: " << edge->weight << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+template<typename TI, typename TV, typename TE>
+TV UndirectedGraph<TI, TV, TE>::findById(const TI& id) {
+    if (this->vertexes.find(id) != this->vertexes.end()) {
+        return this->vertexes[id]->data;
+    }
+    throw std::out_of_range("Vertex with the given ID does not exist.");
+}
 
 #endif
