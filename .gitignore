@@ -30,3 +30,6 @@
 # Automatically generated files
 Makefile
 CMakeLists.txt.user
+
+.devcontainer/
+other/
