@@ -36,7 +36,7 @@ $ ./airport_graph pe.json 2789
 
 **Output (Specific Airport Information):**
 
-```
+```textplain
 Vertex 2789 (data: Jorge Chavez Intl):
     Edge to vertex 2812 (data: Teniente Alejandro Velasco Astete Intl) with weight 585912
     Edge to vertex 2788 (data: Comandante Fap German Arias Graziani) with weight 302051
