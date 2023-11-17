@@ -1,7 +1,9 @@
+#pragma once
 #include "graph.hpp"
+#include <stack>
 
 template<typename TI, typename TV, typename TE>
-class DirectedGraph : public Graph<TV, TE> {
+class DirectedGraph : public Graph<TI, TV, TE> {
 public:
     bool add_vertex(TI id, TV vertex) {
         if (this->vertexes.find(id) != this->vertexes.end()) {
@@ -35,6 +37,19 @@ public:
         start_vertex->edges[this->vertexes[end]] = new_edge;
 
         return true; // edge added
+    }
+
+    bool search_vertex(TI id) {
+        return this->vertexes.find(id) != this->vertexes.end();
+    }
+
+    bool search_edge(TI start, TI end) {
+        if (this->vertexes.find(start) == this->vertexes.end() || 
+            this->vertexes.find(end) == this->vertexes.end()) {
+            return false; // one or both vertexes don't exist
+        }
+        // vertexes exist, so search for edge
+        return this->vertexes[start]->edges.find(this->vertexes[end]) != this->vertexes[start]->edges.end();
     }
 
     bool remove_vertex(TI id) {
@@ -88,7 +103,7 @@ public:
         if (this->vertexes.empty()) {
             return 0.0f; // graph is empty
         }
-        // graph isn't empty, so calculate density for directed graph
+        // graph isn't empty, so calculate density
         float density = 0.0f;
         for (auto& vertex : this->vertexes) {
             density += vertex.second->edges.size();
@@ -96,6 +111,10 @@ public:
         density /= this->vertexes.size() * (this->vertexes.size() - 1);
 
         return density; // return density
+    }
+
+    bool is_dense(float threshold = 0.5) {
+        return this->density() >= threshold;
     }
 
     bool empty() {
@@ -114,11 +133,47 @@ public:
 
     void display() {
         for (auto& vertex : this->vertexes) {
-            std::cout << vertex.first << ": ";
-            for (auto& edge : vertex.second->edges) {
-                std::cout << edge.first->data << " ";
+            std::cout << "Vertex " << vertex.first << " (data: " << vertex.second->data << "):\n";
+            if (vertex.second->edges.empty()) { // vertex has no edges
+                std::cout << "\tNo edges\n";
+            } else { // vertex has edges
+                for (auto& edge : vertex.second->edges) {
+                    TI id;
+                    for (auto& vertex2 : this->vertexes) {
+                        if (vertex2.second == edge.first) {
+                            id = vertex2.first;
+                            break;
+                        }
+                    }
+                    std::cout << "\tEdge to vertex " << id << " (data: " 
+                              << edge.first->data << ") with weight " 
+                              << edge.second->weight << '\n';
+                }
             }
-            std::cout << std::endl;
+        }
+    }
+
+    void display_vertex(TI id) {
+        if (this->vertexes.find(id) == this->vertexes.end()) {
+            throw std::out_of_range("vertex doesn't exist");
+        }
+        // vertex exists, so display it
+        std::cout << "Vertex " << id << " (data: " << this->vertexes[id]->data << "):\n";
+        if (this->vertexes[id]->edges.empty()) { // vertex has no edges
+            std::cout << "\tNo edges\n";
+        } else { // vertex has edges
+            for (auto& edge : this->vertexes[id]->edges) {
+                TI id2;
+                for (auto& vertex : this->vertexes) {
+                    if (vertex.second == edge.first) {
+                        id2 = vertex.first;
+                        break;
+                    }
+                }
+                std::cout << "\tEdge to vertex " << id2 << " (data: " 
+                          << edge.first->data << ") with weight " 
+                          << edge.second->weight << '\n';
+            }
         }
     }
 };
