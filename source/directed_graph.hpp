@@ -1,47 +1,5 @@
 #include "graph.hpp"
 
-/* in graph.hpp:
-#pragma once
-#include <iostream>
-#include <unordered_map>
-#include <list>
-
-template<typename TV, typename TE>
-struct Edge;
-
-template<typename TV, typename TE>
-struct Vertex;
-
-template<typename TID, typename TV, typename TE>
-class Graph {
-private:
-    std::unordered_map<TID, Vertex<TV, TE>*> vertexes;
-
-public:
-    virtual bool add_vertex(TID id, TV vertex) = 0;
-    virtual bool add_edge(TID start, TID end, TE edge) = 0;
-    virtual bool remove_vertex(TID id) = 0;
-    virtual bool remove_edge(TID start, TID end) = 0;
-    virtual TE& operator() (TID start, TID end) = 0;
-    virtual float density() = 0;
-    virtual bool empty() = 0;
-    virtual void clear() = 0;
-    virtual void display() = 0;
-};
-
-template<typename TV, typename TE>
-struct Edge {
-    Vertex<TV, TE>* vertexes[2];
-    TE weight;
-};
-
-template<typename TV, typename TE>
-struct Vertex {
-    TV data;
-    std::unordered_map<Vertex<TV, TE>*, Edge<TV, TE>*> edges;
-};
-*/
-
 template<typename TI, typename TV, typename TE>
 class DirectedGraph : public Graph<TV, TE> {
 public:
@@ -58,15 +16,23 @@ public:
     }
 
     bool add_edge(TI start, TI end, TE edge) {
-        if (this->vertexes.find(start) == this->vertexes.end() || this->vertexes.find(end) == this->vertexes.end()) {
+        if (this->vertexes.find(start) == this->vertexes.end() || 
+            this->vertexes.find(end) == this->vertexes.end()) {
             return false; // one or both vertexes don't exist
         }
         // vertexes exist, so add edge
+        Vertex<TV, TE>* start_vertex = this->vertexes[start];
+
+        // check if edge already exists
+        if (start_vertex->edges.find(this->vertexes[end]) != start_vertex->edges.end()) {
+            return false; // edge already exists
+        }
+        // edge doesn't exist, so add it
         Edge<TV, TE>* new_edge = new Edge<TV, TE>;
-        new_edge->vertexes[0] = this->vertexes[start];
+        new_edge->vertexes[0] = start_vertex;
         new_edge->vertexes[1] = this->vertexes[end];
         new_edge->weight = edge;
-        this->vertexes[start]->edges[this->vertexes[end]] = new_edge; // add edge to start vertex
+        start_vertex->edges[this->vertexes[end]] = new_edge;
 
         return true; // edge added
     }
@@ -79,7 +45,9 @@ public:
         for (auto& vertex : this->vertexes) {
             if (vertex.second->edges.find(this->vertexes[id]) != vertex.second->edges.end()) {
                 // vertex has an edge to the vertex to be removed
-                vertex.second->edges.erase(this->vertexes[id]); // remove edge
+                // remove edge
+                delete vertex.second->edges[this->vertexes[id]];
+                vertex.second->edges.erase(this->vertexes[id]);
             }
         }
         delete this->vertexes[id]; // delete vertex
@@ -89,7 +57,8 @@ public:
     }
 
     bool remove_edge(TI start, TI end) {
-        if (this->vertexes.find(start) == this->vertexes.end() || this->vertexes.find(end) == this->vertexes.end()) {
+        if (this->vertexes.find(start) == this->vertexes.end() || 
+            this->vertexes.find(end) == this->vertexes.end()) {
             return false; // one or both vertexes don't exist
         }
         // vertexes exist, so remove edge
@@ -119,23 +88,28 @@ public:
         if (this->vertexes.empty()) {
             return 0.0f; // graph is empty
         }
-        // graph isn't empty, so calculate density
-        int num_edges = 0;
+        // graph isn't empty, so calculate density for directed graph
+        float density = 0.0f;
         for (auto& vertex : this->vertexes) {
-            num_edges += vertex.second->edges.size();
+            density += vertex.second->edges.size();
         }
-        return (float)num_edges / (float)this->vertexes.size(); // return density
+        density /= this->vertexes.size() * (this->vertexes.size() - 1);
+
+        return density; // return density
     }
 
     bool empty() {
-        return this->vertexes.empty(); // return whether graph is empty
+        return this->vertexes.empty();
     }
 
     void clear() {
         for (auto& vertex : this->vertexes) {
-            delete vertex.second; // delete vertex
+            for (auto& edge : vertex.second->edges) {
+                delete edge.second;
+            }
+            delete vertex.second;
         }
-        this->vertexes.clear(); // clear map
+        this->vertexes.clear();
     }
 
     void display() {
