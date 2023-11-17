@@ -1,60 +1,67 @@
 #include <random>
+#include <fstream>
 #include "../include/undirected_graph.hpp"
 #include "../include/directed_graph.hpp"
+#include "../include/json.hpp"
 
-void test_for_dir() {
-    DirectedGraph<int, int, int> graph;
+using json = nlohmann::json;
 
-    // Generación de valores aleatorios para los vértices
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> vertex_values(0, 100); // Rango de valores aleatorios
+// Calculate the distance between two points with latitude and longitude
+float distance(float lat1, float lon1, float lat2, float lon2) {
+    float R = 6371e3; // metres
+    float phi1 = lat1 * M_PI / 180; // φ, λ in radians
+    float phi2 = lat2 * M_PI / 180;
+    float delta_phi = (lat2 - lat1) * M_PI / 180;
+    float delta_lambda = (lon2 - lon1) * M_PI / 180;
 
-    for (int i = 0; i < 7; ++i) {
-        int vertex_value = vertex_values(gen); // Generar valor aleatorio para el vértice
-        graph.add_vertex(i, vertex_value);
-    }
+    float a = sin(delta_phi / 2) * sin(delta_phi / 2) +
+              cos(phi1) * cos(phi2) *
+              sin(delta_lambda / 2) * sin(delta_lambda / 2);
+    float c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-    // Añadir aristas al azar con valores aleatorios
-    std::uniform_int_distribution<> edge_values(1, 10); // Rango de valores aleatorios para las aristas
-
-    for (int i = 0; i < 3; ++i) {
-        int from = std::uniform_int_distribution<>(0, 6)(gen); // Vértice de origen aleatorio
-        int to = std::uniform_int_distribution<>(0, 6)(gen);   // Vértice de destino aleatorio
-        int edge_value = edge_values(gen); // Valor aleatorio para la arista
-        graph.add_edge(from, to, edge_value);
-    }
-
-    graph.display();
-}
-
-void test_for_undir() {
-    UndirectedGraph<int, int, int> graph;
-
-    // Generación de valores aleatorios para los vértices
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> vertex_values(0, 100); // Rango de valores aleatorios
-
-    for (int i = 0; i < 7; ++i) {
-        int vertex_value = vertex_values(gen); // Generar valor aleatorio para el vértice
-        graph.add_vertex(i, vertex_value);
-    }
-
-    // Añadir aristas al azar con valores aleatorios
-    std::uniform_int_distribution<> edge_values(1, 10); // Rango de valores aleatorios para las aristas
-
-    for (int i = 0; i < 3; ++i) {
-        int from = std::uniform_int_distribution<>(0, 6)(gen); // Vértice de origen aleatorio
-        int to = std::uniform_int_distribution<>(0, 6)(gen);   // Vértice de destino aleatorio
-        int edge_value = edge_values(gen); // Valor aleatorio para la arista
-        graph.add_edge(from, to, edge_value);
-    }
-
-    graph.display();
+    float d = R * c; // in metres
+    return d;
 }
 
 int main(int argc, char const *argv[]) {
-    test_for_undir();
+    std::string path = "../data/" + std::string(argv[1]);
+    json data;
+
+    std::ifstream file(path);
+    file >> data;
+    file.close();
+
+    // UndirectedGraph;
+    UndirectedGraph<std::string, std::string, float> graph;
+
+    for (auto &airport : data) {
+        std::string id1 = airport["Airport ID"];
+        std::string name1 = airport["Name"];
+        std::string latitude1 = airport["Latitude"];
+        std::string longitude1 = airport["Longitude"];
+
+        graph.add_vertex(id1, name1);
+        for (const auto& destination : airport["destinations"]) {
+            for (const auto&airport2 : data) {
+                if (airport2["Airport ID"] == destination) {
+                    
+                    std::string id2 = airport2["Airport ID"];
+                    std::string latitude2 = airport2["Latitude"];
+                    std::string longitude2 = airport2["Longitude"];
+                    
+                    float lat1 = std::stof(latitude1);
+                    float lon1 = std::stof(longitude1);
+                    float lat2 = std::stof(latitude2);
+                    float lon2 = std::stof(longitude2);
+
+                    float dist = distance(lat1, lon1, lat2, lon2);
+                    graph.add_edge(id1, id2, dist);
+                }
+            }
+        }
+    }
+
+    graph.display_vertex(std::string(argv[2]));
+
     return 0;
 }

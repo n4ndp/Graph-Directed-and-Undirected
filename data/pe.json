@@ -1,0 +1,363 @@
+[
+    {
+        "City": "Juliaca",
+        "DBTZ": "U",
+        "Name": "Juliaca",
+        "Country": "Peru",
+        "IATA/FAA": "JUL",
+        "Longitude": "-70.158169",
+        "ICAO": "SPJL",
+        "Airport ID": "2792",
+        "Latitude": "-15.467103",
+        "Timezone": "12552",
+        "DST": "-5",
+        "destinations": [
+            "2802",
+            "2812",
+            "2789"
+        ]
+    },
+    {
+        "City": "Tumbes",
+        "DBTZ": "U",
+        "Name": "Pedro Canga",
+        "Country": "Peru",
+        "IATA/FAA": "TBP",
+        "Longitude": "-80.381356",
+        "ICAO": "SPME",
+        "Airport ID": "2796",
+        "Latitude": "-3.552528",
+        "Timezone": "115",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Huanuco",
+        "DBTZ": "U",
+        "Name": "Alferez Fap David Figueroa Fernandini Airport",
+        "Country": "Peru",
+        "IATA/FAA": "HUU",
+        "Longitude": "-76.204797",
+        "ICAO": "SPNC",
+        "Airport ID": "6067",
+        "Latitude": "-9.878811",
+        "Timezone": "6070",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Cajamarca",
+        "DBTZ": "U",
+        "Name": "Mayor General FAP Armando Revoredo Iglesias Airport",
+        "Country": "Peru",
+        "IATA/FAA": "CJA",
+        "Longitude": "-78.4894",
+        "ICAO": "SPJR",
+        "Airport ID": "6066",
+        "Latitude": "-7.139183",
+        "Timezone": "8781",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Puerto Maldonado",
+        "DBTZ": "U",
+        "Name": "Padre Aldamiz",
+        "Country": "Peru",
+        "IATA/FAA": "PEM",
+        "Longitude": "-69.228611",
+        "ICAO": "SPTU",
+        "Airport ID": "2808",
+        "Latitude": "-12.613611",
+        "Timezone": "659",
+        "DST": "-5",
+        "destinations": [
+            "2812",
+            "2789"
+        ]
+    },
+    {
+        "City": "Piura",
+        "DBTZ": "U",
+        "Name": "Capitan Fap Guillermo Concha Iberico",
+        "Country": "Peru",
+        "IATA/FAA": "PIU",
+        "Longitude": "-80.616444",
+        "ICAO": "SPUR",
+        "Airport ID": "2809",
+        "Latitude": "-5.20575",
+        "Timezone": "120",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Arequipa",
+        "DBTZ": "U",
+        "Name": "Rodriguez Ballon",
+        "Country": "Peru",
+        "IATA/FAA": "AQP",
+        "Longitude": "-71.583083",
+        "ICAO": "SPQU",
+        "Airport ID": "2802",
+        "Latitude": "-16.341072",
+        "Timezone": "8405",
+        "DST": "-5",
+        "destinations": [
+            "2789",
+            "2792",
+            "2812",
+            "2807",
+            "2762"
+        ]
+    },
+    {
+        "City": "Iquitos",
+        "DBTZ": "U",
+        "Name": "Coronel Francisco Secada Vignetta Intl",
+        "Country": "Peru",
+        "IATA/FAA": "IQT",
+        "Longitude": "-73.308806",
+        "ICAO": "SPQT",
+        "Airport ID": "2801",
+        "Latitude": "-3.784739",
+        "Timezone": "306",
+        "DST": "-5",
+        "destinations": [
+            "2781",
+            "2806",
+            "1871",
+            "2789"
+        ]
+    },
+    {
+        "City": "Tarapoto",
+        "DBTZ": "U",
+        "Name": "Cadete Guillermo Del Castillo Paredes",
+        "Country": "Peru",
+        "IATA/FAA": "TPP",
+        "Longitude": "-76.373247",
+        "ICAO": "SPST",
+        "Airport ID": "2806",
+        "Latitude": "-6.508742",
+        "Timezone": "869",
+        "DST": "-5",
+        "destinations": [
+            "2801",
+            "2789",
+            "2781"
+        ]
+    },
+    {
+        "City": "Tacna",
+        "DBTZ": "U",
+        "Name": "Coronel Carlos Ciriani Santa Rosa Intl",
+        "Country": "Peru",
+        "IATA/FAA": "TCQ",
+        "Longitude": "-70.275833",
+        "ICAO": "SPTN",
+        "Airport ID": "2807",
+        "Latitude": "-18.053333",
+        "Timezone": "1538",
+        "DST": "-5",
+        "destinations": [
+            "2789",
+            "2802"
+        ]
+    },
+    {
+        "City": "Trujillo",
+        "DBTZ": "U",
+        "Name": "Capitan Carlos Martinez De Pinillos",
+        "Country": "Peru",
+        "IATA/FAA": "TRU",
+        "Longitude": "-79.108761",
+        "ICAO": "SPRU",
+        "Airport ID": "2804",
+        "Latitude": "-8.081411",
+        "Timezone": "106",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Chiclayo",
+        "DBTZ": "U",
+        "Name": "Capt Jose A Quinones Gonzales Intl",
+        "Country": "Peru",
+        "IATA/FAA": "CIX",
+        "Longitude": "-79.828097",
+        "ICAO": "SPHI",
+        "Airport ID": "2785",
+        "Latitude": "-6.787475",
+        "Timezone": "97",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Andahuaylas",
+        "DBTZ": "U",
+        "Name": "Andahuaylas",
+        "Country": "Peru",
+        "IATA/FAA": "ANS",
+        "Longitude": "-73.350378",
+        "ICAO": "SPHY",
+        "Airport ID": "2787",
+        "Latitude": "-13.706408",
+        "Timezone": "11300",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Ayacucho",
+        "DBTZ": "U",
+        "Name": "Coronel Fap Alfredo Mendivil Duarte",
+        "Country": "Peru",
+        "IATA/FAA": "AYP",
+        "Longitude": "-74.204417",
+        "ICAO": "SPHO",
+        "Airport ID": "2786",
+        "Latitude": "-13.154819",
+        "Timezone": "8917",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Pucallpa",
+        "DBTZ": "U",
+        "Name": "Cap Fap David Abenzur Rengifo Intl",
+        "Country": "Peru",
+        "IATA/FAA": "PCL",
+        "Longitude": "-74.574297",
+        "ICAO": "SPCL",
+        "Airport ID": "2781",
+        "Latitude": "-8.377939",
+        "Timezone": "513",
+        "DST": "-5",
+        "destinations": [
+            "2801",
+            "2789",
+            "2806"
+        ]
+    },
+    {
+        "City": "Lima",
+        "DBTZ": "U",
+        "Name": "Jorge Chavez Intl",
+        "Country": "Peru",
+        "IATA/FAA": "LIM",
+        "Longitude": "-77.114319",
+        "ICAO": "SPIM",
+        "Airport ID": "2789",
+        "Latitude": "-12.021889",
+        "Timezone": "113",
+        "DST": "-5",
+        "destinations": [
+            "2786",
+            "2812",
+            "6067",
+            "2781",
+            "2806",
+            "3670",
+            "3797",
+            "3484",
+            "3576",
+            "2650",
+            "193",
+            "1382",
+            "2802",
+            "2762",
+            "1824",
+            "2771",
+            "3988",
+            "2651",
+            "2699",
+            "2709",
+            "2851",
+            "2715",
+            "2560",
+            "2564",
+            "2673",
+            "2745",
+            "2816",
+            "2599",
+            "1892",
+            "1762",
+            "1885",
+            "2688",
+            "580",
+            "3533",
+            "1871",
+            "3682",
+            "1229",
+            "2554",
+            "2785",
+            "6066",
+            "2443",
+            "1852",
+            "1909",
+            "2801",
+            "2792",
+            "2808",
+            "2809",
+            "1760",
+            "2796",
+            "2807",
+            "2804",
+            "3494",
+            "3550",
+            "2787",
+            "2788"
+        ]
+    },
+    {
+        "City": "Anta",
+        "DBTZ": "U",
+        "Name": "Comandante Fap German Arias Graziani",
+        "Country": "Peru",
+        "IATA/FAA": "ATA",
+        "Longitude": "-77.598392",
+        "ICAO": "SPHZ",
+        "Airport ID": "2788",
+        "Latitude": "-9.347444",
+        "Timezone": "9097",
+        "DST": "-5",
+        "destinations": [
+            "2789"
+        ]
+    },
+    {
+        "City": "Cuzco",
+        "DBTZ": "U",
+        "Name": "Teniente Alejandro Velasco Astete Intl",
+        "Country": "Peru",
+        "IATA/FAA": "CUZ",
+        "Longitude": "-71.938781",
+        "ICAO": "SPZO",
+        "Airport ID": "2812",
+        "Latitude": "-13.535722",
+        "Timezone": "10860",
+        "DST": "-5",
+        "destinations": [
+            "2789",
+            "2808",
+            "2792",
+            "2802",
+            "2762"
+        ]
+    }
+]
