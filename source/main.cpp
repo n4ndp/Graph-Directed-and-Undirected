@@ -61,7 +61,16 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    graph.display_vertex(std::string(argv[2]));
+    if (argc == 2) {
+        graph.display();
+        return 0;
+    } else if (argc != 3) {
+        std::cout << "Error: invalid arguments" << std::endl;
+        return 1;
+    } else {
+        graph.display_vertex(std::string(argv[2]));
+        return 1;
+    }
 
     return 0;
 }
