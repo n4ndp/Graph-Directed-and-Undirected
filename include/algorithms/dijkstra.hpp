@@ -1,8 +1,6 @@
 #pragma once
-#include "../graph.hpp"
 #include <vector>
 #include <limits>
-#include <set>
 #include <queue>
 
 template<typename TI, typename TV, typename TE> // secuential
@@ -15,7 +13,7 @@ std::unordered_map<TI, TE> dijkstra_secuential(Graph<TI, TV, TE>& graph, TI star
     }
     distances[start] = 0; // distance from start to itself is 0
 
-    std::set<TI> R;
+    std::unordered_set<TI> R;
     for (auto& vertex : V) {
         R.insert(vertex.first);
     } // R is V initially
