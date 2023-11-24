@@ -22,6 +22,7 @@ public:
     virtual bool remove_vertex(TI id) = 0;
     virtual bool remove_edge(TI start, TI end) = 0;
     virtual TE& operator() (TI start, TI end) = 0;
+    virtual operator bool() const = 0; // true if graph is directed, false if graph is undirected
     virtual float density() = 0;
     virtual bool is_dense(float threshold = 0.5) = 0;
     virtual bool empty() = 0;

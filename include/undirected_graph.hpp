@@ -112,6 +112,10 @@ public:
         return this->vertexes[start]->edges[end]->weight; // return weight of edge
     }
 
+    operator bool() const override {
+        return false; // graph is undirected
+    }
+
     float density() override {
         if (this->vertexes.empty()) {
             return 0.0f; // graph is empty
