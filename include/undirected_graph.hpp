@@ -1,6 +1,5 @@
 #pragma once
 #include "graph.hpp"
-#include <stack>
 
 template<typename TI, typename TV, typename TE>
 class UndirectedGraph : public Graph<TI, TV, TE> {

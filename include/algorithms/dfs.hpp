@@ -1,5 +1,8 @@
 #pragma once
+#include "../graph.hpp"
+#include <unordered_set>
 #include <vector>
+#include <limits>
 
 template<typename TI, typename TV, typename TE>
 void DFS(Graph<TI, TV, TE>& graph, TI start, std::unordered_set<TI>& visited, std::vector<std::pair<TI, TI>>& tree_edges, std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>>& V) {

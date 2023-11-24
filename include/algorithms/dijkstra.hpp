@@ -1,4 +1,6 @@
 #pragma once
+#include "../graph.hpp"
+#include <unordered_set>
 #include <vector>
 #include <limits>
 #include <queue>

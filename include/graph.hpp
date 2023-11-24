@@ -1,9 +1,7 @@
 #pragma once
-#include <tuple>
+
 #include <memory>
-#include <iostream>
 #include <unordered_map>
-#include <unordered_set>
 
 template<typename TI, typename TV, typename TE>
 struct Edge;
@@ -32,7 +30,6 @@ public:
     virtual void display() = 0;
     virtual void display_vertex(TI id) = 0;
     const std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>>& get_vertexes() const;
-    const std::unordered_map<std::pair<TI, TI>, TE> get_edges() const;
     size_t sizev();
     size_t sizee();
 };
@@ -40,32 +37,6 @@ public:
 template<typename TI, typename TV, typename TE>
 const std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>>& Graph<TI, TV, TE>::get_vertexes() const {
     return this->vertexes;
-}
-
-template<typename TI, typename TV, typename TE>
-const std::unordered_map<std::pair<TI, TI>, TE> Graph<TI, TV, TE>::get_edges() const {
-    std::unordered_map<std::pair<TI, TI>, TE> E;
-    std::unordered_set<TI> visited; // if is undirected, avoid duplicates
-    
-    if (*this) { // if graph is directed
-        for (auto& vertex : this->vertexes) {
-            for (auto& edge : vertex.second->edges) {
-                E[std::make_pair(vertex.first, edge.first)] = edge.second->weight;
-            }
-        }
-    }
-    else { // if graph is undirected
-        for (auto& vertex : this->vertexes) {
-            for (auto& edge : vertex.second->edges) {
-                if (visited.find(edge.first) == visited.end()) {
-                    E[std::make_pair(vertex.first, edge.first)] = edge.second->weight;
-                }
-            }
-            visited.insert(vertex.first); // add vertex visited
-        }
-    }
-
-    return E;
 }
 
 template<typename TI, typename TV, typename TE>
