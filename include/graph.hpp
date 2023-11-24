@@ -1,18 +1,18 @@
 #pragma once
+#include <memory>
 #include <iostream>
 #include <unordered_map>
-#include <list>
 
-template<typename TV, typename TE>
+template<typename TI, typename TV, typename TE>
 struct Edge;
 
-template<typename TV, typename TE>
+template<typename TI, typename TV, typename TE>
 struct Vertex;
 
 template<typename TI, typename TV, typename TE>
 class Graph {
 protected:
-    std::unordered_map<TI, Vertex<TV, TE>*> vertexes;
+    std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>> vertexes;
 
 public:
     virtual bool add_vertex(TI id, TV vertex) = 0;
@@ -28,13 +28,13 @@ public:
     virtual void clear() = 0;
     virtual void display() = 0;
     virtual void display_vertex(TI id) = 0;
-    std::unordered_map<TI, Vertex<TV, TE>*> get_vertexes() const;
+    const std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>>& get_vertexes() const;
     size_t sizev();
     size_t sizee();
 };
 
 template<typename TI, typename TV, typename TE>
-std::unordered_map<TI, Vertex<TV, TE>*> Graph<TI, TV, TE>::get_vertexes() const {
+const std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>>& Graph<TI, TV, TE>::get_vertexes() const {
     return this->vertexes;
 }
 
@@ -52,14 +52,15 @@ size_t Graph<TI, TV, TE>::sizee() { // number of edges
     return size;
 }
 
-template<typename TV, typename TE>
+template<typename TI, typename TV, typename TE>
 struct Edge {
-    Vertex<TV, TE>* vertexes[2];
+    std::shared_ptr<Vertex<TI, TV, TE>> vertexes[2];
     TE weight;
 };
 
-template<typename TV, typename TE>
+template<typename TI, typename TV, typename TE>
 struct Vertex {
+    TI id;
     TV data;
-    std::unordered_map<Vertex<TV, TE>*, Edge<TV, TE>*> edges;
+    std::unordered_map<TI, std::unique_ptr<Edge<TI, TV, TE>>> edges;
 };
