@@ -120,8 +120,10 @@ int test_bellman_ford() {
 }
 
 int main() {
-    //test_dijkstra();
-    //test_bellman_ford();
+    test_dijkstra();
+    std::cout << std::endl;
+    test_bellman_ford();
+    std::cout << std::endl;
     test_dfs();
 
     return EXIT_SUCCESS;
