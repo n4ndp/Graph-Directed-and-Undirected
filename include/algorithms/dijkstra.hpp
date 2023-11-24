@@ -1,10 +1,12 @@
 #pragma once
 #include "../graph.hpp"
+#include <vector>
 #include <limits>
 #include <set>
+#include <queue>
 
-template<typename TI, typename TV, typename TE>
-std::unordered_map<TI, TE> dijkstra(Graph<TI, TV, TE>& graph, TI start) {
+template<typename TI, typename TV, typename TE> // secuential
+std::unordered_map<TI, TE> dijkstra_secuential(Graph<TI, TV, TE>& graph, TI start) {
     std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>> V = graph.get_vertexes();
 
     std::unordered_map<TI, TE> distances; // distances from start to each vertex
@@ -38,36 +40,33 @@ std::unordered_map<TI, TE> dijkstra(Graph<TI, TV, TE>& graph, TI start) {
     return distances; // return distances from start to each vertex
 }
 
-/*
-int main(int argc, char const *argv[]) {
-    DirectedGraph<std::string, std::string, int> graph;
+template<typename TI, typename TV, typename TE> // priority queue
+std::unordered_map<TI, TE> dijkstra_priority_queue(Graph<TI, TV, TE>& graph, TI start) {
+    std::unordered_map<TI, std::shared_ptr<Vertex<TI, TV, TE>>> V = graph.get_vertexes();
 
-    graph.add_vertex("A", "A");
-    graph.add_vertex("B", "B");
-    graph.add_vertex("C", "C");
-    graph.add_vertex("D", "D");
-    graph.add_vertex("E", "E");
+    std::unordered_map<TI, TE> distances; // distances from start to each vertex
+    for (auto& vertex : V) {
+        distances[vertex.first] = std::numeric_limits<TE>::max(); // distance from start to vertex is infinite
+    }
+    distances[start] = 0; // distance from start to itself is 0
 
-    graph.add_edge("A", "B", 4);
-    graph.add_edge("A", "C", 2);
+    std::priority_queue<std::pair<TE, TI>, std::vector<std::pair<TE, TI>>, std::greater<std::pair<TE, TI>>> Q;
+    for (auto& vertex : V) {
+        Q.push(std::make_pair(distances[vertex.first], vertex.first)); // Q is a priority queue of pairs (distance, vertex)
+    } // Q is V initially
 
-    graph.add_edge("B", "C", 3);
-    graph.add_edge("B", "D", 2);
-    graph.add_edge("B", "E", 3);
+    while (!Q.empty()) {
+        TI min_vertex = Q.top().second;
+        Q.pop(); // remove min_vertex from Q
 
-    graph.add_edge("C", "B", 1);
-    graph.add_edge("C", "D", 4);
-    graph.add_edge("C", "E", 5);
-
-    graph.add_edge("E", "D", 1);
-
-    std::string s = "A";
-    std::unordered_map<std::string, int> distances = dijkstra<std::string, std::string, int>(graph, s);
-
-    for (auto& distance : distances) {
-        std::cout << "Distance from " << s << " to " << distance.first << " is " << distance.second << std::endl;
+        for (auto& edge : V[min_vertex]->edges) { // for each edge (min_vertex, x)
+            TI x = edge.second->vertexes[1]->id;
+            if (distances[min_vertex] + edge.second->weight < distances[x]) {
+                distances[x] = distances[min_vertex] + edge.second->weight; // update distance from start to x
+                Q.push(std::make_pair(distances[x], x)); // add (distance, x) to Q
+            }
+        }
     }
 
-    return 0;
+    return distances; // return distances from start to each vertex
 }
-*/
