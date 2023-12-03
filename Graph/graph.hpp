@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <unordered_map>
+#include <tuple>
 
 template<typename TI, typename TV, typename TE>
 class Graph {
@@ -42,17 +43,25 @@ public:
     }
 };
 
-// Only for vertexes with numeric keys
 template<typename TI, typename TV, typename TE>
-std::vector<std::vector<bool>> to_adjacency_matrix(Graph<TI, TV, TE>& graph) {
-    auto vertexes = graph.get_vertexes();
-    std::vector<std::vector<bool>> matrix(vertexes.size(), std::vector<bool>(vertexes.size(), false));
+std::tuple<std::unordered_map<TI, int>, std::vector<std::vector<TE>>> to_adjacency_matrix(Graph<TI, TV, TE>& graph) {
+    auto V = graph.get_vertexes();
+    std::unordered_map<TI, int> index; // index of vertex in matrix (row/column)
+    int i = 0;
+    for (auto& [key, vertex] : V) {
+        index[key] = i;
+        i++;
+    }
+    std::vector<std::vector<TE>> matrix(V.size(), std::vector<TE>(V.size(), std::numeric_limits<TE>::max())); // adjacency matrix
+    for (int i = 0; i < V.size(); i++) {
+        matrix[i][i] = 0.0f; // distance from vertex to itself is 0
+    }
 
-    for (auto& [key, vertex] : vertexes) {
+    for (auto& [key, vertex] : V) {
         for (auto& [neighbor, edge] : vertex->edges) {
-            matrix[key][neighbor->key] = true;
+            matrix[index[key]][index[neighbor->key]] = edge->weight; // distance from vertex to neighbor is weight of edge
         }
     }
 
-    return matrix;
+    return std::make_tuple(index, matrix);
 }
