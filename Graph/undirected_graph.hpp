@@ -33,7 +33,10 @@ public:
 
         // Check if edge already exists
         if (start_vertex->edges.find(end_vertex) != start_vertex->edges.end()) {
-            return false; // Edge already exists
+            // Edge already exists, update weight
+            start_vertex->edges[end_vertex]->weight = weight;
+            end_vertex->edges[start_vertex]->weight = weight;
+            return true;
         }
 
         // Edge doesn't exist, so add it

@@ -1,28 +1,36 @@
 #include "../directed_graph.hpp"
 #include "floyd_warshall.hpp"
+#include "johnson.hpp"
 
 int main() {
     DirectedGraph<int, int, int> graph;
 
+    graph.insert_vertex(6, 6);
     graph.insert_vertex(5, 5);
     graph.insert_vertex(4, 4);
     graph.insert_vertex(3, 3);
     graph.insert_vertex(2, 2);
     graph.insert_vertex(1, 1);
 
-    graph.insert_edge(1, 2, 3);
-    graph.insert_edge(1, 3, 8);
-    graph.insert_edge(1, 5, -4);
+    graph.insert_edge(1, 5, -1);
 
-    graph.insert_edge(2, 4, 1);
-    graph.insert_edge(2, 5, 7);
+    graph.insert_edge(2, 1, 4);
+    graph.insert_edge(2, 4, 2);
 
-    graph.insert_edge(3, 2, 4);
+    graph.insert_edge(3, 2, 2);
+    graph.insert_edge(3, 6, -8);
 
-    graph.insert_edge(4, 1, 2);
-    graph.insert_edge(4, 3, -5);
+    graph.insert_edge(4, 5, 3);
+    graph.insert_edge(4, 1, -4);
 
-    graph.insert_edge(5, 4, 6);
+    graph.insert_edge(5, 2, 7);
+
+    graph.insert_edge(6, 3, 10);
+    graph.insert_edge(6, 2, 5);
+
+    jhonson(graph);
+
+    
 
     /*auto [index, matrix] = to_adjacency_matrix(graph);
 
@@ -35,7 +43,7 @@ int main() {
             }
         }
         std::cout << std::endl;
-    }*/
+    }
 
     auto matrix = floyd_warshall(graph);
 
@@ -50,5 +58,5 @@ int main() {
         std::cout << std::endl;
     }
 
-    return 0;
+    return 0;*/
 }
