@@ -1,7 +1,7 @@
 #include <random>
 #include <fstream>
-#include "../Graph/undirected_graph.hpp"
-#include "../Graph/directed_graph.hpp"
+#include "../include/Graph/undirected_graph.hpp"
+#include "../include/Graph/directed_graph.hpp"
 #include "../include/json.hpp"
 
 using json = nlohmann::json;
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
     std::string path;
     std::string param;
 
-    if (false) {
+    if (true) {
         path = "../data/pe.json";
         param = "2789";
     } else {
