@@ -3,7 +3,6 @@
 #include <iostream>
 #include <memory>
 #include <unordered_map>
-#include <tuple>
 
 template<typename TI, typename TV, typename TE>
 class Graph {
@@ -37,14 +36,15 @@ public:
     virtual bool empty() = 0;
     virtual void clear() = 0;
     virtual void display() = 0;
+    virtual void display_vertex(TI id) = 0;
 
     std::unordered_map<TI, std::shared_ptr<Vertex>>& get_vertexes() {
-        return vertexes;
+        return this->vertexes;
     }
 };
 
 template<typename TI, typename TV, typename TE>
-std::tuple<std::unordered_map<TI, int>, std::vector<std::vector<TE>>> to_adjacency_matrix(Graph<TI, TV, TE>& graph) {
+std::pair<std::unordered_map<TI, int>, std::vector<std::vector<TE>>> to_adjacency_matrix(Graph<TI, TV, TE>& graph) {
     auto V = graph.get_vertexes();
     std::unordered_map<TI, int> index; // index of vertex in matrix (row/column)
     int i = 0;
@@ -63,5 +63,5 @@ std::tuple<std::unordered_map<TI, int>, std::vector<std::vector<TE>>> to_adjacen
         }
     }
 
-    return std::make_tuple(index, matrix);
+    return std::make_pair(index, matrix);
 }

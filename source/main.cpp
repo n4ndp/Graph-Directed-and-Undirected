@@ -1,7 +1,7 @@
 #include <random>
 #include <fstream>
-#include "../include/undirected_graph.hpp"
-#include "../include/directed_graph.hpp"
+#include "../Graph/undirected_graph.hpp"
+#include "../Graph/directed_graph.hpp"
 #include "../include/json.hpp"
 
 using json = nlohmann::json;
@@ -24,9 +24,18 @@ float distance(float lat1, float lon1, float lat2, float lon2) {
 }
 
 int main(int argc, char const *argv[]) {
-    std::string path = "../data/" + std::string(argv[1]);
-    json data;
+    std::string path;
+    std::string param;
 
+    if (false) {
+        path = "../data/pe.json";
+        param = "2789";
+    } else {
+        path = "../data/" + std::string(argv[1]);
+        param = std::string(argv[2]);
+    }
+
+    json data;
     std::ifstream file(path);
     file >> data;
     file.close();
@@ -40,7 +49,7 @@ int main(int argc, char const *argv[]) {
         std::string latitude1 = airport["Latitude"];
         std::string longitude1 = airport["Longitude"];
 
-        graph.add_vertex(id1, name1);
+        graph.insert_vertex(id1, name1);
         for (const auto& destination : airport["destinations"]) {
             for (const auto&airport2 : data) {
                 if (airport2["Airport ID"] == destination) {
@@ -55,22 +64,13 @@ int main(int argc, char const *argv[]) {
                     float lon2 = std::stof(longitude2);
 
                     float dist = distance(lat1, lon1, lat2, lon2);
-                    graph.add_edge(id1, id2, dist);
+                    graph.insert_edge(id1, id2, dist);
                 }
             }
         }
     }
 
-    if (argc == 2) {
-        graph.display();
-        return 0;
-    } else if (argc != 3) {
-        std::cout << "Error: invalid arguments" << std::endl;
-        return 1;
-    } else {
-        graph.display_vertex(std::string(argv[2]));
-        return 1;
-    }
+    graph.display_vertex(param);
 
     return 0;
 }

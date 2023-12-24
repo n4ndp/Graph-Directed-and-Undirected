@@ -13,7 +13,7 @@ public:
         }
 
         // Vertex doesn't exist, so add it
-        std::shared_ptr<Vertex> new_vertex = std::make_shared<Vertex>();
+        auto new_vertex = std::make_shared<Vertex>();
         new_vertex->key = key;
         new_vertex->value = value;
         this->vertexes[key] = new_vertex;
@@ -28,8 +28,8 @@ public:
         }
 
         // Vertexes exist, so add edge
-        std::shared_ptr<Vertex> start_vertex = this->vertexes[start];
-        std::shared_ptr<Vertex> end_vertex = this->vertexes[end];
+        auto start_vertex = this->vertexes[start];
+        auto end_vertex = this->vertexes[end];
 
         // Check if edge already exists
         if (start_vertex->edges.find(end_vertex) != start_vertex->edges.end()) {
@@ -40,12 +40,12 @@ public:
         }
 
         // Edge doesn't exist, so add it
-        std::unique_ptr<Edge> new_edge_start = std::make_unique<Edge>();
+        auto new_edge_start = std::make_unique<Edge>();
         new_edge_start->vertexes[0] = start_vertex;
         new_edge_start->vertexes[1] = end_vertex;
         new_edge_start->weight = weight;
 
-        std::unique_ptr<Edge> new_edge_end = std::make_unique<Edge>();
+        auto new_edge_end = std::make_unique<Edge>();
         new_edge_end->vertexes[0] = end_vertex;
         new_edge_end->vertexes[1] = start_vertex;
         new_edge_end->weight = weight;
@@ -62,7 +62,7 @@ public:
         }
 
         // Vertex exists, so remove it
-        std::shared_ptr<Vertex> vertex = this->vertexes[key];
+        auto vertex = this->vertexes[key];
 
         // Remove all edges that point to this vertex
         for (auto& [key, value] : vertex->edges) {
@@ -70,6 +70,7 @@ public:
         }
 
         // Remove vertex
+        vertex->edges.clear();
         this->vertexes.erase(key);
 
         return true;
@@ -78,12 +79,12 @@ public:
     bool remove_edge(TI start, TI end) override {
         if (this->vertexes.find(start) == this->vertexes.end() ||
             this->vertexes.find(end) == this->vertexes.end()) {
-            return false; // Vertex doesn't exist
+            return false; // One or both vertexes don't exist
         }
 
         // Vertexes exist, so remove edge
-        std::shared_ptr<Vertex> start_vertex = this->vertexes[start];
-        std::shared_ptr<Vertex> end_vertex = this->vertexes[end];
+        auto start_vertex = this->vertexes[start];
+        auto end_vertex = this->vertexes[end];
 
         // Check if edge exists
         if (start_vertex->edges.find(end_vertex) == start_vertex->edges.end()) {
@@ -104,8 +105,8 @@ public:
         }
 
         // Vertexes exist, so return edge
-        std::shared_ptr<Vertex> start_vertex = this->vertexes[start];
-        std::shared_ptr<Vertex> end_vertex = this->vertexes[end];
+        auto start_vertex = this->vertexes[start];
+        auto end_vertex = this->vertexes[end];
 
         // Check if edge exists
         if (start_vertex->edges.find(end_vertex) == start_vertex->edges.end()) {
@@ -158,6 +159,18 @@ public:
             for (auto& [key, value] : value->edges) {
                 std::cout << "\tEdge to vertex " << key->key << " (data: " << key->value << ") with weight " << value->weight << "\n";
             }
+        }
+    }
+
+    void display_vertex(TI id) override {
+        if (this->vertexes.find(id) == this->vertexes.end()) {
+            throw std::out_of_range("Vertex doesn't exist");
+        }
+
+        auto vertex = this->vertexes[id];
+        std::cout << "Vertex " << id << " (data: " << vertex->value << "):\n";
+        for (auto& [key, value] : vertex->edges) {
+            std::cout << "\tEdge to vertex " << key->key << " (data: " << key->value << ") with weight " << value->weight << "\n";
         }
     }
 };
