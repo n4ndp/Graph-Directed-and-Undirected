@@ -1,6 +1,6 @@
 # **Graph | `Directed` and `Undirected`**
 
-This C++ implementation provides a weighted graph capable of representing and managing connections between airports. By assigning weights to edges, it effectively models the complexity and distance between these locations, enabling efficient modeling of air routes and their relationships.
+This C++ implementation provides a weighted graph (directed or undirected) that represents a network of airports and their connections. Additionally, within the 'Algorithms' folder, you can find various algorithms designed to traverse the graph and determine the shortest path between two airports.
 
 ## **Dataset: [Peruvian Airports](https://raw.githubusercontent.com/n4ndp/Graph/main/data/pe.json?token=GHSAT0AAAAAACJDGABQ3DNPYXUHO5DQNDYMZKXFZJQ)**
 

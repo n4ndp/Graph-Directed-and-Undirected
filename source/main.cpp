@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
     std::string path;
     std::string param;
 
-    if (true) {
+    if (false) {
         path = "../data/pe.json";
         param = "2789";
     } else {
