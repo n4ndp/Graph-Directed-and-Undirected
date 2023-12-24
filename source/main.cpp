@@ -4,8 +4,6 @@
 #include "../include/Graph/directed_graph.hpp"
 #include "../include/json.hpp"
 
-using json = nlohmann::json;
-
 // Calculate the distance between two points with latitude and longitude
 float distance(float lat1, float lon1, float lat2, float lon2) {
     float R = 6371e3; // metres
@@ -24,26 +22,26 @@ float distance(float lat1, float lon1, float lat2, float lon2) {
 }
 
 int main(int argc, char const *argv[]) {
-    std::string path;
-    std::string param;
+    std::string file_path = "../data/pe.json";
+    std::string air_code = "2789";
 
-    if (false) {
-        path = "../data/pe.json";
-        param = "2789";
-    } else {
-        path = "../data/" + std::string(argv[1]);
-        param = std::string(argv[2]);
+    std::ifstream input_file(file_path);
+    if (!input_file.is_open()) {
+        std::cerr << "Could not open file: " << file_path << std::endl;
+        return 1;
     }
 
-    json data;
-    std::ifstream file(path);
-    file >> data;
-    file.close();
+    nlohmann::json json_data;
+    try {
+        input_file >> json_data;
+    } catch (nlohmann::json::parse_error& e) {
+        std::cerr << "JSON parse error: " << e.what() << std::endl;
+        return 1;
+    }
 
-    // UndirectedGraph;
     UndirectedGraph<std::string, std::string, float> graph;
 
-    for (auto &airport : data) {
+    for (auto &airport : json_data) {
         std::string id1 = airport["Airport ID"];
         std::string name1 = airport["Name"];
         std::string latitude1 = airport["Latitude"];
@@ -51,7 +49,7 @@ int main(int argc, char const *argv[]) {
 
         graph.insert_vertex(id1, name1);
         for (const auto& destination : airport["destinations"]) {
-            for (const auto&airport2 : data) {
+            for (const auto&airport2 : json_data) {
                 if (airport2["Airport ID"] == destination) {
                     
                     std::string id2 = airport2["Airport ID"];
@@ -70,7 +68,8 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    graph.display_vertex(param);
+    std::cout << "Graph: " << std::endl;
+    graph.display();
 
     return 0;
 }
