@@ -80,7 +80,6 @@ public:
         return true;
     }
 
-
     TE& operator() (TK start, TK end) override {
         auto it_start = this->vertices.find(start);
         auto it_end = this->vertices.find(end);
