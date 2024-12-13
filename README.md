@@ -1,4 +1,4 @@
-# **Grafos | `Dirigido` y `No Dirigido`**
+# **Graphs | `Directed` and `Undirected`**
 
 Esta implementación en C++ proporciona un grafo ponderado (dirigido o no dirigido) que representa una red de aeropuertos y sus conexiones.
 
